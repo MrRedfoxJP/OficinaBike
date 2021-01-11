@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Modelos</title>
+</h:head>
+<h:body>
+	<ui:composition template="/template/template_adm.xhtml">
+		<ui:define name="content">
+			<h:form id="formLista">
+
+				<p:panel header="Modelos">
+					<h:panelGrid columns="4" style="margin: 30px auto;">
+						<h:outputText value="Pesquisar: " />
+						<p:inputText size="40" value="#{MBModelo.nomeBusca}" />
+
+						<p:commandButton value="Buscar"
+							actionListener="#{MBModelo.buscar}" update="tblModelo, :growl" />
+
+						<p:commandButton value="Cadastrar"
+							actionListener="#{MBModelo.novo}" update=":formDialog:painel"
+							onclick="PF('dlg2').show();" />
+
+					</h:panelGrid>
+
+					<p:dataTable id="tblModelo" var="modelo"
+						value="#{MBModelo.listaModelo}" paginator="true" rows="10"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+				            Modelos
+				        </f:facet>
+						<p:column headerText="Nome">
+							<h:outputText value="#{modelo.nome}" />
+						</p:column>
+
+						<p:column headerText="Categoria">
+							<h:outputText value="#{modelo.categoria}" />
+						</p:column>
+
+						<p:column headerText="Marca">
+							<h:outputText value="#{modelo.marca.nome}" />
+						</p:column>
+
+						<p:column style="width:32px;text-align: center"
+							rendered="#{autenticacaoBean.usuario.tipoFormatado != 'Funcionario'}">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{MBModelo.excluir}"
+								update=":growl :formLista:tblModelo">
+								<f:attribute name="modelo" value="#{modelo}" />
+								<p:confirm header="Confirmation"
+									message="Deseja realmente excluir?" icon="ui-icon-alert" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column style="width:32px;text-align: center">
+							<p:commandButton icon="ui-icon-pencil"
+								actionListener="#{MBModelo.editar}"
+								oncomplete="PF('dlg2').show();"
+								update=":growl :formDialog:painel">
+								<f:attribute name="modelo" value="#{modelo}" />
+
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade"
+					hideEffect="explode">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+
+			<p:dialog header="Modelo" widgetVar="dlg2" resizable="false"
+				modal="true" appendTo="@(body)">
+				<h:form id="formDialog">
+					<h:panelGrid id="painel" columns="2" style="margin: 30px auto;">
+						<p:outputLabel value="Nome:" />
+						<p:inputText size="40" value="#{MBModelo.modelo.nome}"
+							required="true" requiredMessage="O campo nome é obrigatório" />
+
+						<p:outputLabel value="Categoria:" />
+						<p:inputText size="40" value="#{MBModelo.modelo.categoria}"
+							required="true" requiredMessage="O campo categoria é obrigatório" />
+
+						<h:outputLabel></h:outputLabel>
+						<p:selectOneMenu style="width:200px;" id="cbMarca"
+							value="#{MBModelo.marcaSelecionado}"
+							converter="omnifaces.SelectItemsConverter" filter="true"
+							required="true" requiredMessage="O campo marca é obrigatório"
+							filterMatchMode="contains">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione uma Marca" />
+							<f:selectItems value="#{MBModelo.listaMarca}" var="marca"
+								itemValue="#{marca}" itemLabel="#{marca.nome}" />
+						</p:selectOneMenu>
+						<h:outputLabel></h:outputLabel>
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2">
+					<p:commandButton value="Salvar" actionListener="#{MBModelo.Salvar}"
+						update=":growl :formDialog:painel :formLista:tblModelo" />
+
+					<p:commandButton value="Fechar" oncomplete="PF('dlg2').hide();" />
+					</h:panelGrid>
+					
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.5"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+
+	<!-- Arquivo Principal da Aplicação -->
+	<welcome-file-list>
+		<welcome-file>paginas/Autenticacao.xhtml</welcome-file>
+	</welcome-file-list>
+
+
+	<!-- Fase do Projeto -->
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+
+	<!-- Tema do primefaces -->
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>casablanca</param-value>
+	</context-param>
+
+	<!-- Tempo da Sessão -->
+	<session-config>
+		<session-timeout>5</session-timeout>
+	</session-config>
+
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/paginas/Autenticacao.xhtml</location>
+	</error-page>
+
+	<!-- Configuração do JSF -->
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+	<listener>
+		<listener-class>br.com.oficinabike.util.HibernateContexto</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+</web-app>

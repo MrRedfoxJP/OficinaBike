@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Oficina Bike</title>
+</h:head>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<h:outputStylesheet library="css" name="style.css" />
+	<h:outputScript library="js" name="scripts.js" />
+
+</h:head>
+<h:body>
+	<p:layout style="width: 1340px; height: 950px; margin: 15px auto">
+
+		<p:growl id="growl"/>
+
+		<p:layoutUnit id="texto_menu" position="north" minSize="70">
+			<h2 style="text-align: center;">Oficina Bike</h2>
+			<!-- <p:graphicImage align ="left"  library="images" name="bike2.jpg" /> -->
+
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" size="260" minSize="40" maxSize="260">
+			<h:form id="formMenu">
+				<p:accordionPanel id="painel">
+					<p:tab title="Cadastro">
+
+						<h:commandLink action="/paginas/index.xhtml">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Home" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="/paginas/pessoa.xhtml"
+							rendered="#{autenticacaoBean.usuario.tipoFormatado != 'Funcionario'}">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Funcionários" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="/paginas/usuario.xhtml"
+							rendered="#{autenticacaoBean.usuario.tipoFormatado != 'Funcionario'}">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Usuarios" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="/paginas/cliente.xhtml">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Clientes" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+
+						<h:commandLink action="/paginas/marcas.xhtml">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Marcas" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="/paginas/modelo.xhtml">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Modelos" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+
+						<h:commandLink action="/paginas/produtos.xhtml">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Produtos" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+
+						<h:commandLink action="/paginas/vendas.xhtml">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Orçamento" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="#{autenticacaoBean.sair}">
+							<h:panelGrid columns="2">
+								<h:outputText styleClass="texto_menu" value="Sair" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+
+					</p:tab>
+					<p:tab title="Relatório Operacional"
+						rendered="#{autenticacaoBean.usuario.tipoFormatado != 'Funcionario'}">
+
+						<h:commandLink action="#{pessoaBean.executarRelatorio}"
+							target="_blank">
+							<h:panelGrid>
+								<h:outputText styleClass="texto_menu" value="Relatório Pessoas" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="#{vendaBean.executarRelatorio}"
+							target="_blank">
+							<h:panelGrid>
+								<h:outputText styleClass="texto_menu" value="Relatório Venda" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="#{MBCliente.executarRelatorio}"
+							target="_blank">
+							<h:panelGrid>
+								<h:outputText styleClass="texto_menu" value="Relatório Clientes" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="#{MBProduto.executarRelatorio}"
+							target="_blank">
+							<h:panelGrid>
+								<h:outputText styleClass="texto_menu" value="Relatório Produtos" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+						<h:commandLink action="#{MBModelo.executarRelatorio}"
+							target="_blank">
+							<h:panelGrid>
+								<h:outputText styleClass="texto_menu"
+									value="Relatório Venda por Cliente" />
+							</h:panelGrid>
+							<hr />
+						</h:commandLink>
+
+
+					</p:tab>
+				</p:accordionPanel>
+			</h:form>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+			<ui:insert name="content">corpo</ui:insert>
+		</p:layoutUnit>
+	</p:layout>
+
+
+</h:body>
+
+</html>

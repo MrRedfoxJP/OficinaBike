@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cliente</title>
+
+</h:head>
+<h:body>
+	<ui:composition template="/template/template_adm.xhtml">
+		<ui:define name="content">
+			<h:form id="formLista">
+
+				<p:panel header="Clientes">
+					<h:panelGrid columns="4" style="margin: 30px auto;">
+						<h:outputText value="Pesquisar: " />
+						<p:inputText size="40" value="#{MBCliente.nomeBusca}" />
+
+						<p:commandButton value="Buscar"
+							actionListener="#{MBCliente.buscar}" update="tblCliente, :growl" />
+
+						<p:commandButton value="Cadastrar"
+							actionListener="#{MBCliente.novo}" update=":formDialog:painel"
+							onclick="PF('dlg2').show();" />
+					</h:panelGrid>
+
+					<p:dataTable id="tblCliente" var="cliente"
+						value="#{MBCliente.listaCliente}" paginator="true" rows="10"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+				            Clientes
+				        </f:facet>
+						<p:column headerText="Nome">
+							<h:outputText value="#{cliente.nomeCliente}" />
+						</p:column>
+
+						<p:column headerText="CPF">
+							<h:outputText value="#{cliente.cpfCnpj}" />
+						</p:column>
+
+						<p:column headerText="Celular">
+							<h:outputText value="#{cliente.celular}" />
+						</p:column>
+
+						<p:column headerText="Endereço">
+							<h:outputText value="#{cliente.endereco}" />
+						</p:column>
+
+						<p:column headerText="Cidade">
+							<h:outputText value="#{cliente.cidade}" />
+						</p:column>
+
+						<p:column style="width:32px;text-align: center"
+							rendered="#{autenticacaoBean.usuario.tipoFormatado != 'Funcionario'}">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{MBCliente.excluir}"
+								update=":growl :formLista:tblCliente">
+								<f:attribute name="clienteSelecionado" value="#{cliente}" />
+								<p:confirm header="Confirmation"
+									message="Deseja realmente excluir?" icon="ui-icon-alert" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column style="width:32px;text-align: center">
+							<p:commandButton icon="ui-icon-pencil"
+								actionListener="#{MBCliente.editar}"
+								oncomplete="PF('dlg2').show();" update=":formDialog:painel">
+								<f:attribute name="clienteSelecionado" value="#{cliente}" />
+
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade"
+					hideEffect="explode">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+
+			<p:dialog header="Clientes" widgetVar="dlg2" resizable="false"
+				modal="true" appendTo="@(body)">
+				<h:form id="formDialog">
+					<h:panelGrid id="painel" columns="2" style="margin: 30px auto;">
+						<h:outputLabel for="nome" value="Nome:*" />
+						<p:inputText id="nome" size="30"
+							value="#{MBCliente.cliente.nomeCliente}" required="true"
+							requiredMessage="O campo nome é obrigatório" />
+
+						<h:outputLabel for="endereco" value="Endereço:*" />
+						<p:inputText id="endereco" size="30"
+							value="#{MBCliente.cliente.endereco}" required="true"
+							requiredMessage="O campo endereco é obrigatório" />
+
+						<h:outputLabel for="cidade" value="Cidade:*" />
+						<p:inputText id="cidade" size="30"
+							value="#{MBCliente.cliente.cidade}" required="true"
+							requiredMessage="O campo cidade é obrigatório" />
+
+						<h:outputText value="Telefone:" />
+						<p:inputMask size="15" value="#{MBCliente.cliente.telefone}"
+							mask="(99)9999-9999" />
+
+						<h:outputLabel for="celular" value="Celular:*" />
+						<p:inputMask id="celular" size="15"
+							value="#{MBCliente.cliente.celular}" required="true"
+							mask="(99)9 9999-9999"
+							requiredMessage="O campo celular é obrigatório" />
+
+						<h:outputLabel for="cpf" value="CPF:*" />
+						<p:inputMask id="cpf" size="15"
+							value="#{MBCliente.cliente.cpfCnpj}" required="true"
+							mask="999.999.999-99" requiredMessage="O campo CPF é obrigatório" />
+
+						<p:outputLabel for="dataCadas" value="Data de Cadastro:" />
+						<p:calendar id="dataCadas"
+							value="#{MBCliente.cliente.dataCadastro}" locale="pt_BR"
+							navigator="true" pattern="dd/MM/yyyy" required="true"
+							mask="99/99/9999" size="10"
+							requiredMessage="O campo data cadastro é obrigatório" />
+
+
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{MBCliente.salvar}"
+						update=":growl :formDialog:painel :formLista:tblCliente " />
+
+					<p:commandButton value="Fechar" oncomplete="PF('dlg2').hide();" />
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cadastro de Pessoas</title>
+</h:head>
+<h:body>
+	<ui:composition template="/template/template_adm.xhtml">
+		<ui:define name="content">
+			<p:dialog header="Pessoa" widgetVar="dlg2" resizable="false"
+				modal="true" appendTo="@(body)">
+				<h:form id="formDialog">
+					<h:panelGrid id="painel" columns="2" style="margin: 30px auto;">
+
+						<h:outputText value="Nome da Pessoa:* "></h:outputText>
+						<p:inputText size="40" value="#{pessoaBean.pessoa.nome}"
+							required="true" requiredMessage="O campo nome é obrigatório" />
+
+						<h:outputLabel for="cpf" value="CPF:*" />
+						<p:inputMask id="cpf" size="15" value="#{pessoaBean.pessoa.cpf}"
+							required="true" mask="999.999.999-99"
+							requiredMessage="O campo CPF é obrigatório" />
+
+						<h:outputText value="Rua:* "></h:outputText>
+						<p:inputText size="40" value="#{pessoaBean.pessoa.rua}"
+							required="true" requiredMessage="O campo rua é obrigatório" />
+
+						<p:outputLabel value="Número:*" />
+						<p:inputText maxlength="5" size="10"
+							value="#{pessoaBean.pessoa.numero}" required="true"
+							requiredMessage="O campo 'Número' é obrigatório"
+							converterMessage="Informe um valor válido para o campo 'Número'"
+							validatorMessage="Informe um valor entre 1 e 32767 para o campo 'Número'">
+							<f:validateLongRange minimum="1" maximum="32767" />
+						</p:inputText>
+
+						<p:outputLabel for="bairro" value="Bairro:" />
+						<p:inputText id="bairro" maxlength="30" size="20"
+							value="#{pessoaBean.pessoa.bairro}" required="true"
+							requiredMessage="O campo 'Bairro' é obrigatório" />
+
+						<p:outputLabel for="cep" value="CEP:" />
+						<p:inputMask id="cep" size="15" value="#{pessoaBean.pessoa.cep}"
+							required="true" mask="99999-999"
+							requiredMessage="O campo cep é obrigatório" />
+
+						<h:outputText value="Cidade: *"></h:outputText>
+						<p:inputText size="40" value="#{pessoaBean.pessoa.cidade}"
+							required="true" requiredMessage="O campo cidade é obrigatório" />
+
+						<p:outputLabel for="complemento" value="Complemento:" />
+						<p:inputText id="complemento" maxlength="10" size="10"
+							value="#{pessoaBean.pessoa.complemento}" />
+
+						<p:outputLabel for="telefone" value="Telefone:" />
+						<p:inputMask id="telefone" size="15"
+							value="#{pessoaBean.pessoa.telefone}" mask="(99)9999-9999" />
+
+						<p:outputLabel for="celular" value="Celular:" />
+						<p:inputMask id="celular" size="15"
+							value="#{pessoaBean.pessoa.celular}" required="true"
+							mask="(99)9 9999-9999"
+							requiredMessage="O campo celular é obrigatório" />
+
+						<p:outputLabel for="email" value="Email:" />
+						<p:inputText id="email" maxlength="100" size="50"
+							value="#{pessoaBean.pessoa.email}" required="true"
+							requiredMessage="O campo 'Email' é obrigatório" />
+
+						
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+							actionListener="#{pessoaBean.salvar}"
+							update=":growl :formDialog:painel :formlista:tblPessoa" />
+
+					<p:commandButton value="Fechar" oncomplete="PF('dlg2').hide();" />
+					</h:panelGrid>
+
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

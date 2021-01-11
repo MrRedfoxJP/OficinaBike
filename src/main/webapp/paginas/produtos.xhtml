@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+
+
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Produtos</title>
+</h:head>
+<h:body>
+	<ui:composition template="/template/template_adm.xhtml">
+		<ui:define name="content">
+			<script>
+				function mascara(o, f) {
+					v_obj = o;
+					v_fun = f;
+					setTimeout("execmascara()", 1);
+				}
+				function execmascara() {
+					v_obj.value = v_fun(v_obj.value);
+				}
+				function valor(v) {
+					v = v.replace(/\D/g, "");
+					v = v.replace(/[0-9]{15}/, "invalido");
+					v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos
+					// algoritmos 11 digitos
+					v = v.replace(/(\d{1})(\d{8})$/, "$1.$2"); // coloca ponto antes dos
+					// algoritmos 8 digitos
+					v = v.replace(/(\d{1})(\d{5})$/, "$1.$2"); // coloca ponto antes dos
+					// algoritmos 5 digitos
+					v = v.replace(/(\d{1})(\d{1,2})$/, "$1,$2"); // coloca virgula antes dos
+					// algoritmos 2 digitos
+					return v;
+				}
+			</script>
+			<h:form id="formlista">
+				<p:panel header="Produtos">
+
+					<h:panelGrid columns="4" style="margin: 30px auto;">
+						<h:outputText value="Pesquisar: " />
+						<p:inputText size="40" value="#{MBProduto.nomeBusca}" />
+
+						<p:commandButton value="Buscar"
+							actionListener="#{MBProduto.buscar}" update="tblProduto, :growl" />
+
+						<p:commandButton value="Cadastrar"
+							actionListener="#{MBProduto.novo}" update=":formDialog:painel"
+							onclick="PF('dlg2').show();" />
+
+					</h:panelGrid>
+
+					<p:dataTable id="tblProduto" var="produto"
+						value="#{MBProduto.listaProduto}" paginator="true" rows="10"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+				            Produtos
+				        </f:facet>
+						<p:column headerText="Nome">
+							<h:outputText value="#{produto.nome}" />
+						</p:column>
+
+						<p:column headerText="Valor da Compra">
+							<h:outputText value="#{produto.valorCompra}">
+								<f:convertNumber type="currency" currencySymbol="R$"
+									currencyCode="BRL" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Marca">
+							<h:outputText value="#{produto.marca.nome}" />
+						</p:column>
+
+						<p:column headerText="Modelo">
+							<h:outputText value="#{produto.modelo.nome}" />
+						</p:column>
+
+						<p:column headerText="% sug. Lucro">
+							<h:outputText value="#{produto.porcentagemLucroSugerido}" />
+						</p:column>
+
+						<p:column style="width:32px;text-align: center"
+							rendered="#{autenticacaoBean.usuario.tipoFormatado != 'Funcionario'}">
+							<p:commandButton icon="ui-icon-trash"
+								actionListener="#{MBProduto.excluir}"
+								update=":formlista:tblProduto">
+								<f:attribute name="produto" value="#{produto}" />
+								<p:confirm header="Confirmation"
+									message="Deseja realmente excluir?" icon="ui-icon-alert" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column style="width:32px;text-align: center">
+							<p:commandButton icon="ui-icon-pencil"
+								actionListener="#{MBProduto.editar}"
+								oncomplete="PF('dlg2').show();" update=":formDialog:painel">
+								<f:attribute name="produto" value="#{produto}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+
+				<p:confirmDialog global="true" showEffect="fade"
+					hideEffect="explode">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Não" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</h:form>
+
+			<p:dialog header="Produtos" widgetVar="dlg2" resizable="false"
+				modal="true" appendTo="@(body)">
+				<h:form id="formDialog">
+					<h:panelGrid id="painel" columns="2" style="margin: 30px auto;">
+
+						<h:outputText value="Nome do Produto: "></h:outputText>
+						<p:inputText size="40" value="#{MBProduto.produto.nome}"
+							required="true"
+							requiredMessage="O campo nome do produto é obrigatório" />
+
+						<h:outputText value="Valor da Compra: "></h:outputText>
+						<p:inputText size="20" value="#{MBProduto.produto.valorCompra}"
+							onkeypress="mascara(this, valor);" required="true"
+							requiredMessage="O campo valor da compra é obrigatório">
+							<f:convertNumber currencyCode="BRL" />
+						</p:inputText>
+
+
+						<h:outputText value="Porcentagem de Lucro Sugerido: "></h:outputText>
+						<pe:inputNumber id="Input8"
+							value="#{MBProduto.produto.porcentagemLucroSugerido}" symbol="%"
+							symbolPosition="s" emptyValue="sign" decimalSeparator=","
+							thousandSeparator="." minValue="0.00" maxValue="500.00"
+							required="true"
+							requiredMessage="O campo porcentagem lucro sugerido é obrigatório" />
+
+						<h:outputLabel for="marca" value="Marca: "></h:outputLabel>
+						<p:selectOneMenu style="width:200px;" id="marca"
+							value="#{MBProduto.marca}"
+							converter="omnifaces.SelectItemsConverter" filter="true"
+							filterMatchMode="contains" required="true"
+							requiredMessage="O campo marca é obrigatório">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione uma Marca" />
+							<f:selectItems value="#{MBProduto.listaMarca}" var="marca"
+								itemValue="#{marca}" itemLabel="#{marca.nome}" />
+							<p:ajax listener="#{MBProduto.onMarcaChange}"
+								update=":formDialog:cbModelo" />
+
+						</p:selectOneMenu>
+
+						<h:outputLabel for="cbModelo" value="Modelo: "></h:outputLabel>
+						<p:selectOneMenu style="width:200px;" id="cbModelo"
+							value="#{MBProduto.modeloSelecionado}"
+							converter="omnifaces.SelectItemsConverter" filter="true"
+							filterMatchMode="contains">
+							<f:selectItem noSelectionOption="true" itemValue=""
+								itemLabel="Selecione um Modelo" />
+							<f:selectItems value="#{MBProduto.listaModelo}" var="modelo"
+								itemValue="#{modelo}" itemLabel="#{modelo.nome}" />
+
+						</p:selectOneMenu>
+
+
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2">
+					<p:commandButton value="Salvar"
+						actionListener="#{MBProduto.salvar}"
+						update=":growl :formDialog:painel :formlista:tblProduto" />
+
+					<p:commandButton value="Fechar" oncomplete="PF('dlg2').hide();" />
+					</h:panelGrid>
+					
+				</h:form>
+			</p:dialog>
+
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>
